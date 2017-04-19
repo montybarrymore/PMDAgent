@@ -9,7 +9,7 @@ import java.util.ArrayList;
 public class BasicAgent {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        String input =br.readLine();
+        String input = br.readLine();
         Token t = evaluate(input);
 
         System.out.println();
@@ -27,15 +27,16 @@ public class BasicAgent {
                     index++;
                     System.out.println(symbol);
                 }
+
                 // NUMBER
-                else if(symbol.matches("-") && input.substring(index + 1, index + 2).matches("[0-9]") ||
+                else if (symbol.matches("-") && input.substring(index + 1, index + 2).matches("[0-9]") ||
                         symbol.matches("[0-9]")) {
                     String substring = symbol;
                     index++;
 
                     boolean isNumber = true;
                     do {
-                        if(index < input.length()) {
+                        if (index < input.length()) {
                             symbol = input.substring(index, index + 1);
                             if (symbol.matches("[0-9.]")) {
                                 substring = substring + symbol;
@@ -46,46 +47,25 @@ public class BasicAgent {
                         } else {
                             isNumber = false;
                         }
-                    } while(isNumber);
+                    } while (isNumber);
                     infixList.add(new Token(Token.Type.NUMBER, Float.parseFloat(substring)));
+                }
 
-                // ostatni
-                } else {
+                // plus
+                else if (symbol.equals("+")) {
+                    infixList.add(new Token(Token.Type.PLUS, null));
                     index++;
                 }
-            } while (index < input.length()) ;
+
+                // ostatni
+                else {
+                    index++;
+                }
+            } while (index < input.length());
         }
+
+
+
         return null;
     }
 }
-/*
-            // cislo
-            } else if(symbol.matches("[0-9-]")) {
-                String substring = symbol;
-                input = input.substring(1);
-
-                boolean isNumber = true;
-                do {
-                    if(input.length() > 0) {
-                        symbol = input.substring(0, 1);
-                        if (symbol.matches("[0-9.]")) {
-                            substring = substring + symbol;
-                        } else {
-                            isNumber = false;
-                        }
-                        input = input.substring(1);
-                    } else {
-                        isNumber = false;
-                    }
-                } while(isNumber);
-                infixList.add(new Token(Token.Type.NUMBER, Float.parseFloat(substring)));
-            }
-        }
-
-        for(Token t : infixList) {
-            if(t.isNumber()) {
-                System.out.println(t.getValue());
-            }
-        }
-        System.out.println(infixList);
-        */

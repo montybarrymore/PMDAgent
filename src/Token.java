@@ -4,7 +4,9 @@
  */
 public class Token {
     public enum Type {
-        NUMBER, STRING
+        NUMBER,
+        STRING,
+        PLUS
     }
 
     private Type type_;
