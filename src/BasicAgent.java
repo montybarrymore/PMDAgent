@@ -6,7 +6,7 @@ import java.io.InputStreamReader;
  * Created by daniel on 4.10.16.
  */
 public class BasicAgent {
-    enum Operator {PLUS, MULTIPLY, DIVIDE};
+    enum Operator {PLUS, MULTIPLY, DIVIDE, MINUS};
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -71,11 +71,23 @@ public class BasicAgent {
                             dividerPriority = 6;
                             operator = Operator.PLUS;
                         }
+                    } else if (trigram.equals(" - ")) {
+                        if(dividerPriority <= 6) {
+                            dividerPosition = i + 1;
+                            dividerPriority = 6;
+                            operator = Operator.MINUS;
+                        }
                     } else if (trigram.equals(" * ")) {
                         if(dividerPriority <= 5) {
                             dividerPosition = i + 1;
                             dividerPriority = 5;
                             operator = Operator.MULTIPLY;
+                        }
+                    } else if (trigram.equals(" / ")) {
+                        if(dividerPriority <= 5) {
+                            dividerPosition = i + 1;
+                            dividerPriority = 5;
+                            operator = Operator.DIVIDE;
                         }
                     }
                 }
@@ -94,9 +106,14 @@ public class BasicAgent {
                             returnValue = new Token(Token.Type.NUMBER, value);
                         }
                         break;
+                    case MINUS:
+                        returnValue = new Token(Token.Type.NUMBER, leftEval.getFloat() - rightEval.getFloat());
+                        break;
                     case MULTIPLY:
-                        Float value = leftEval.getFloat() * rightEval.getFloat();
-                        returnValue = new Token(Token.Type.NUMBER, value);
+                        returnValue = new Token(Token.Type.NUMBER, leftEval.getFloat() * rightEval.getFloat());
+                        break;
+                    case DIVIDE:
+                        returnValue = new Token(Token.Type.NUMBER, leftEval.getFloat() / rightEval.getFloat());
                         break;
                 }
 
