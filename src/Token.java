@@ -25,7 +25,15 @@ public class Token {
         }
     }
 
-    public String getValue() {
+    public String getString() {
         return value_.toString();
+    }
+
+    public Float getFloat() {
+        if(type_ == Type.NUMBER) {
+            return (Float) value_;
+        } else {
+            return null;
+        }
     }
 }
