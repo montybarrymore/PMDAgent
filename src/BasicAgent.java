@@ -54,7 +54,7 @@ public class BasicAgent {
             int dividerPriority = 0;
             Operator operator = null;
 
-            for (int i = 0; i < input.length() - 2; i++) {
+            for (int i = 0; i < input.length(); i++) {
                 String chr = input.substring(i, i + 1);
                 if(chr.equals("(")) {
                     bracketCount++;
@@ -64,28 +64,43 @@ public class BasicAgent {
                 }
 
                 if(bracketCount == 0) {
-                    String trigram = input.substring(i, i + 3);
-                    if(trigram.equals(" + ")) {
+                    if(chr.equals("+")) {
                         if(dividerPriority <= 6) {
-                            dividerPosition = i + 1;
+                            dividerPosition = i;
                             dividerPriority = 6;
                             operator = Operator.PLUS;
                         }
-                    } else if (trigram.equals(" - ")) {
-                        if(dividerPriority <= 6) {
-                            dividerPosition = i + 1;
-                            dividerPriority = 6;
-                            operator = Operator.MINUS;
+                    } else if (chr.equals("-")) {
+                        int i2 = i;
+                        boolean isOperator = true;
+                        while(i2 > -1 && isOperator){
+                            if(input.substring(i2, i2+1).matches("[-*/+]")) {
+                                isOperator = false;
+                            }
+
+                            if(input.substring(i2, i2+1).equals(")")) {
+                                i2 = -1;
+                            } else {
+                                i2++;
+                            }
                         }
-                    } else if (trigram.equals(" * ")) {
+
+                        if(isOperator) {
+                            if(dividerPriority <= 6) {
+                                dividerPosition = i;
+                                dividerPriority = 6;
+                                operator = Operator.MINUS;
+                            }
+                        }
+                    } else if (chr.equals("*")) {
                         if(dividerPriority <= 5) {
-                            dividerPosition = i + 1;
+                            dividerPosition = i;
                             dividerPriority = 5;
                             operator = Operator.MULTIPLY;
                         }
-                    } else if (trigram.equals(" / ")) {
+                    } else if (chr.equals("/")) {
                         if(dividerPriority <= 5) {
-                            dividerPosition = i + 1;
+                            dividerPosition = i;
                             dividerPriority = 5;
                             operator = Operator.DIVIDE;
                         }
@@ -95,8 +110,8 @@ public class BasicAgent {
             }
 
             if(dividerPriority > 0) {
-                String left = input.substring(0, dividerPosition - 1);
-                String right = input.substring(dividerPosition + 2);
+                String left = input.substring(0, dividerPosition);
+                String right = input.substring(dividerPosition + 1);
                 Token leftEval = evaluate(left);
                 Token rightEval = evaluate(right);
                 switch (operator) {
